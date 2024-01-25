@@ -1,5 +1,5 @@
 import re
-import process_lines as pl
+import processing_functions as pf
 from globals import conditions_dict as cd
 
 """ Prepare Text for Powerpoint """
@@ -8,7 +8,7 @@ def split_and_preprocess_text(text):
     """
     Splits the text into lines and preprocesses each line.
     """
-    lines = pl.split_text(text)
+    lines = pf.split_text(text)
     preprocessed_lines = [line.strip() for line in lines]
     return preprocessed_lines
 
@@ -22,11 +22,11 @@ def process_lines(lines):
 
     for line in lines:
         # Replace words
-        line = pl.replace_words(line, cd['swap_phrase_dict'])
+        line = pf.replace_words(line, cd['swap_phrase_dict'])
 
         # Detect page numbers
         match = re.match(r'(\d+)\s*', line)
-        result = pl.detect_page_numbers(line, match)
+        result = pf.detect_page_numbers(line, match)
         num = result['num']
         line = result['line']
         if num is not None:
@@ -35,12 +35,12 @@ def process_lines(lines):
             last_num = num
 
         # Filter lines
-        line = pl.filter_lines(line, match)
+        line = pf.filter_lines(line, match)
         if line is None:
             continue
 
         # Assemble phrases
-        phrase_being_assembled, new_completed_line_groups, capitalize = pl.assemble_phrases(
+        phrase_being_assembled, new_completed_line_groups, capitalize = pf.assemble_phrases(
             line, cd['qa_phrases'], cd['objection_phrases'], cd['non_party_phrases'], capitalize,
             phrase_being_assembled
         )
@@ -56,7 +56,7 @@ def finalize_and_format(completed_line_groups, first_num, last_num,):
     Finalizes and formats the output.
     """
     # You might have additional processing here based on your requirements
-    formatted_output = pl.format_output(completed_line_groups, first_num, last_num)
+    formatted_output = pf.format_output(completed_line_groups, first_num, last_num)
     return formatted_output
 
 def prepare_text_for_powerpoint(text):

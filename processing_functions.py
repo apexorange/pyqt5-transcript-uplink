@@ -55,8 +55,6 @@ def assemble_phrases(line, qa_phrases, objection_phrases, non_party_phrases, cap
 
     return phrase_being_assembled, completed_line_groups, capitalize
 
-
-
 """ Final Output Formatting """
 
 def format_output(completed_line_groups, first_num, last_num):

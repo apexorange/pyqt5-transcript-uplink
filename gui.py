@@ -3,7 +3,7 @@ import sys
 import fitz #pymupdf
 import metadata as meta
 import pdf_intake as pd
-import process_lines as pl
+import processing_functions as pl
 import format_powerpoint as fp
 import format_oncue as fo
 import globals as gb
