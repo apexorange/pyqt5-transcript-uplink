@@ -5,6 +5,7 @@ import metadata as meta
 import pdf_intake as pd
 import process_lines as pl
 import format_powerpoint as fp
+import format_oncue as fo
 import globals as gb
 from PyQt5.QtCore import pyqtSlot, QTimer
 from PyQt5.QtGui import QFont, QIcon
@@ -280,10 +281,9 @@ class TextProcessorApp(QWidget):
         """ Trigger text reprocessing when the left text field changes either by paste or import """
         the_text = self.aggregate_processed_text(gb.pdf_path)[0]
         output_powerpoint = fp.prepare_text_for_powerpoint(the_text)
-        print(output_powerpoint)
-        # prepare_text_for_oncue = self.prepare_text_for_oncue(text)
+        output_oncue = fo.prepare_text_for_oncue(the_text)
         self.text_box_top_right.setPlainText(output_powerpoint)
-        # self.text_box_bottom_right.setPlainText(prepare_text_for_oncue)
+        self.text_box_bottom_right.setPlainText(output_oncue)
 
     def on_name_change(self):
         # Trigger text reprocessing when the name field changes

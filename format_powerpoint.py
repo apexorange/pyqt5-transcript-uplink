@@ -4,66 +4,65 @@ from globals import conditions_dict as cd
 
 """ Prepare Text for Powerpoint """
 
-def prepare_text_for_powerpoint(text: str) -> str:
+def split_and_preprocess_text(text):
     """
-    This function takes in a text string and prepares it for use in a PowerPoint presentation.
-
-    Parameters:
-    text (str): The text to be prepared.
-
-    Returns:
-    str: The prepared text.
-
+    Splits the text into lines and preprocesses each line.
     """
-    # Initial setup
-    name = "Carly"
-    first_num = None
-    last_num = None
-    capitalize = False
+    lines = pl.split_text(text)
+    preprocessed_lines = [line.strip() for line in lines]
+    return preprocessed_lines
+
+def process_lines(lines):
+    """
+    Processes each line for page numbers, word replacements, line filtering, and phrase assembly.
+    """
+    first_num, last_num, capitalize = None, None, False
     phrase_being_assembled = ""
     completed_line_groups = []
-    show_depo_name = True
 
-    # Call Split text Function
-    lines = pl.split_text(text)
+    for line in lines:
+        # Replace words
+        line = pl.replace_words(line, cd['swap_phrase_dict'])
 
-    # Process each line
-    for i, line in enumerate(lines):
-
-        # Call Replace words Function
-        line = pl.replace_words(line.strip(), cd['swap_phrase_dict'])
-
-        # Call Detect Pages Numbers Function
+        # Detect page numbers
         match = re.match(r'(\d+)\s*', line)
         result = pl.detect_page_numbers(line, match)
         num = result['num']
         line = result['line']
-        if num is None:
-            hidden_num = 0
-        elif num is not None:
+        if num is not None:
             if first_num is None:
                 first_num = num
             last_num = num
 
-        # Call Filter lines Function
+        # Filter lines
         line = pl.filter_lines(line, match)
         if line is None:
             continue
 
-        # Call Assemble phrases Function
+        # Assemble phrases
         phrase_being_assembled, new_completed_line_groups, capitalize = pl.assemble_phrases(
             line, cd['qa_phrases'], cd['objection_phrases'], cd['non_party_phrases'], capitalize,
             phrase_being_assembled
         )
         completed_line_groups.extend(new_completed_line_groups)
 
-    # Finalizing the assembled text
     if phrase_being_assembled:
         completed_line_groups.append(phrase_being_assembled.upper() if capitalize else phrase_being_assembled)
 
-    # # Removing objections if necessary
-    # if hide_objections:
-    #     completed_line_groups = [line for line in completed_line_groups if not line.isupper()]
+    return completed_line_groups, first_num, last_num
 
-    # Format the final output
-    return pl.format_output(completed_line_groups, first_num, last_num, show_depo_name, name)
+def finalize_and_format(completed_line_groups, first_num, last_num,):
+    """
+    Finalizes and formats the output.
+    """
+    # You might have additional processing here based on your requirements
+    formatted_output = pl.format_output(completed_line_groups, first_num, last_num)
+    return formatted_output
+
+def prepare_text_for_powerpoint(text):
+    """
+    Prepares text for PowerPoint presentation.
+    """
+    preprocessed_lines = split_and_preprocess_text(text)
+    completed_line_groups, first_num, last_num = process_lines(preprocessed_lines)
+    return finalize_and_format(completed_line_groups, first_num, last_num)
