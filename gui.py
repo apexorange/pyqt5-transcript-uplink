@@ -258,16 +258,19 @@ class TextProcessorApp(QWidget):
         self.gui_add_input_text()
         # return pdf_path
 
-    def aggregate_processed_text(self, pdf_path):
+    def aggregate_processed_pdf_text(self, pdf_path):
         if pdf_path:
             # Call the function to extract highlighted text and populate the left text field
             result = pd.extract_highlighted_text_with_coordinates(gb.pdf_path)
             highlighted_text = result[0]
             citations = result[1]
-            return highlighted_text, citations
+            return highlighted_text
+        else:
+            return self.text_box_left.toPlainText()
 
     def gui_add_input_text(self):
-        self.text_box_left.setPlainText(self.aggregate_processed_text(gb.pdf_path)[0])
+        self.text_box_left.setPlainText(self.aggregate_processed_pdf_text(gb.pdf_path))
+
 
     @pyqtSlot()
     def hide_objections_change(self):
@@ -279,7 +282,7 @@ class TextProcessorApp(QWidget):
 
     def on_text_change(self):
         """ Trigger text reprocessing when the left text field changes either by paste or import """
-        the_text = self.aggregate_processed_text(gb.pdf_path)[0]
+        the_text = self.aggregate_processed_pdf_text(gb.pdf_path)
         output_powerpoint = fp.prepare_text_for_powerpoint(the_text)
         output_oncue = fo.prepare_text_for_oncue(the_text)
         self.text_box_top_right.setPlainText(output_powerpoint)
@@ -292,6 +295,8 @@ class TextProcessorApp(QWidget):
     @pyqtSlot()
     def activate_clear_button(self):
         self.text_box_left.clear()
+        self.text_box_top_right.clear()
+        self.text_box_bottom_right.clear()
 
     def copy_top_right_to_clipboard(self):
         clipboard = QApplication.clipboard()

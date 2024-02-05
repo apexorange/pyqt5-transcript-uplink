@@ -4,6 +4,7 @@ from globals import conditions_dict as cd
 
 """ Prepare Text for Powerpoint """
 
+
 def split_and_preprocess_text(text):
     """
     Splits the text into lines and preprocesses each line.
@@ -11,6 +12,7 @@ def split_and_preprocess_text(text):
     lines = pf.split_text(text)
     preprocessed_lines = [line.strip() for line in lines]
     return preprocessed_lines
+
 
 def process_lines(lines):
     """
@@ -51,13 +53,16 @@ def process_lines(lines):
 
     return completed_line_groups, first_num, last_num
 
-def finalize_and_format(completed_line_groups, first_num, last_num,):
+
+def finalize_and_format(completed_line_groups, first_num, last_num, witness_name_text="Jimmy" ):
     """
     Finalizes and formats the output.
     """
     # You might have additional processing here based on your requirements
     formatted_output = pf.format_output(completed_line_groups, first_num, last_num)
+    formatted_output += '\n\n{} Tr. Pg. __, Ln. {}-{}'.format(witness_name_text, first_num, last_num)
     return formatted_output
+
 
 def prepare_text_for_powerpoint(text):
     """

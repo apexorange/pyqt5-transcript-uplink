@@ -1,13 +1,16 @@
 def split_text(text):
     return text.split('\n')
 
+
 def replace_words(line, swap_phrase_dict):
     for word, replacement in swap_phrase_dict.items():
         if word in line:
             line = line.replace(word, replacement)
     return line
 
+
 ''' LINE FILTERING '''
+
 
 def detect_page_numbers(line, match):
     result = {'num': None, 'line': line}
@@ -15,6 +18,7 @@ def detect_page_numbers(line, match):
         result['num'] = int(match.group(1))
         result['line'] = line[match.end():].lstrip()
     return result
+
 
 def filter_lines(line, match):
     if line.startswith("BY") and ":" in line:
@@ -25,7 +29,9 @@ def filter_lines(line, match):
         return "\n\n" + line + "\n"
     return line
 
+
 """Phrase Assembly"""
+
 
 def assemble_phrases(line, qa_phrases, objection_phrases, non_party_phrases, capitalize, phrase_being_assembled):
     completed_line_groups = []
@@ -55,7 +61,9 @@ def assemble_phrases(line, qa_phrases, objection_phrases, non_party_phrases, cap
 
     return phrase_being_assembled, completed_line_groups, capitalize
 
+
 """ Final Output Formatting """
+
 
 def format_output(completed_line_groups, first_num, last_num):
     processed_text = ''.join(completed_line_groups).strip()
