@@ -31,9 +31,13 @@ def process_lines(lines):
         result = pf.detect_page_numbers(line, match)
         num = result['num']
         line = result['line']
+        # Check if a page number was detected and the line has content
         if num is not None:
+            # Now, we also check if it's the first number to be found
             if first_num is None:
-                first_num = num
+                # If first_num is None, set it to num - 1, ensuring num is not the first page (i.e., num > 1)
+                # This adjustment is to handle cases where num might be 1 (the first page), and subtracting 1 would make it 0 or negative
+                first_num = max(1, num)
             last_num = num
 
         # Filter lines
