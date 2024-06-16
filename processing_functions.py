@@ -1,6 +1,9 @@
 def split_text(text):
     return text.split('\n')
 
+def check_for_space_dots_in_text(text):
+    pass
+
 
 def replace_words(line, swap_phrase_dict):
     for word, replacement in swap_phrase_dict.items():
